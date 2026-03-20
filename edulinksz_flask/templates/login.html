@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}- Login{% endblock %}
+{% block content %}
+<div class="login-page d-flex align-items-center justify-content-center" style="min-height: 100vh; background: url('{{ url_for('static', filename='bg.png') }}') no-repeat center center; background-size: cover; position: relative;">
+    <div class="overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(43, 76, 126, 0.4); backdrop-filter: blur(2px);"></div>
+    
+    <div class="container" style="position: relative; z-index: 10;">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card glass-card p-4 p-md-5 shadow-2xl border-0 animate-up">
+                    <div class="text-center mb-5">
+                        <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="EduLinkSZ Logo" class="img-fluid mb-4" style="max-height: 120px; filter: drop-shadow(0 0 8px rgba(255,255,255,0.2));">
+                        <h2 class="fw-extrabold text-dark mb-1">EduLink<span style="color: var(--sz-red);">SZ</span></h2>
+                        <p class="text-muted small text-uppercase fw-bold letter-spacing-2">National Academic Portal</p>
+                    </div>
+
+                    <form method="POST" action="{{ url_for('auth.login') }}">
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold text-muted">Username or ID</label>
+                            <div class="input-group input-group-lg shadow-sm">
+                                <span class="input-group-text bg-white border-0 ps-4 rounded-start-4"><i class="fas fa-user text-primary-light"></i></span>
+                                <input type="text" name="username" class="form-control border-0 bg-white ps-2 rounded-end-4" placeholder="Ex: ADM-001" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-5">
+                            <label class="form-label small fw-bold text-muted">Secure Password</label>
+                            <div class="input-group input-group-lg shadow-sm">
+                                <span class="input-group-text bg-white border-0 ps-4 rounded-start-4"><i class="fas fa-lock text-primary-light"></i></span>
+                                <input type="password" name="password" class="form-control border-0 bg-white ps-2 rounded-end-4" placeholder="••••••••" required>
+                            </div>
+                        </div>
+
+                        <div class="d-grid mb-4">
+                            <button type="submit" class="btn btn-primary btn-lg shadow-lg py-3 fw-bold rounded-pill">
+                                Access Portal <i class="fas fa-arrow-right ms-2"></i>
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-5 pt-4 border-top border-light">
+                        <p class="small text-muted mb-0">Authorized personnel only.</p>
+                        <a href="#" class="small text-primary fw-bold text-decoration-none hover-elevate d-inline-block mt-2">Forgot credentials? Contact Admin</a>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <p class="text-white-50 small mb-2">&copy; 2026 EduLinkSZ. Secure. Reliable. Professional.</p>
+                    <div class="d-flex align-items-center justify-content-center gap-2">
+                        <span class="badge rounded-pill bg-success p-1 pe-2 px-2" style="font-size: 0.6rem;">
+                            <span class="spinner-grow spinner-grow-sm me-1" style="width: 0.5rem; height: 0.5rem;"></span> System Operational
+                        </span>
+                        <span class="badge rounded-pill bg-white bg-opacity-10 text-white-50 p-1 px-2 border border-white border-opacity-10" style="font-size: 0.6rem;">
+                            v2.1.0-stable
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .rounded-start-4 { border-radius: 1rem 0 0 1rem !important; }
+    .rounded-end-4 { border-radius: 0 1rem 1rem 0 !important; }
+</style>
+{% endblock %}

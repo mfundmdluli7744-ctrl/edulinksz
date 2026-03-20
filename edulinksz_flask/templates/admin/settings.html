@@ -1,0 +1,77 @@
+{% extends 'admin/layout.html' %}
+{% block admin_content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800 fw-bold">School Profile Settings</h1>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Official School Details</h6>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('admin.settings') }}" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="name" class="form-label fw-bold">School Name</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ profile.name }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label fw-bold">School Address</label>
+                        <input type="text" class="form-control" id="address" name="address" value="{{ profile.address }}">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="email" class="form-label fw-bold">School Email</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ profile.email or '' }}" placeholder="school@example.com">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="tel" class="form-label fw-bold">Telephone (Landline)</label>
+                            <input type="text" class="form-control" id="tel" name="tel" value="{{ profile.tel or '' }}" placeholder="+268 ...">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="phone" class="form-label fw-bold">Mobile Phone</label>
+                            <input type="text" class="form-control" id="phone" name="phone" value="{{ profile.phone or '' }}" placeholder="+268 ...">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="academic_year" class="form-label fw-bold">Academic Year</label>
+                            <input type="text" class="form-control" id="academic_year" name="academic_year" value="{{ profile.academic_year }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="current_term" class="form-label fw-bold">Current Term</label>
+                            <select class="form-select" id="current_term" name="current_term">
+                                <option value="Term 1" {% if profile.current_term == 'Term 1' %}selected{% endif %}>Term 1</option>
+                                <option value="Term 2" {% if profile.current_term == 'Term 2' %}selected{% endif %}>Term 2</option>
+                                <option value="Term 3" {% if profile.current_term == 'Term 3' %}selected{% endif %}>Term 3</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="principal_name" class="form-label fw-bold">Principal / Head Teacher Name</label>
+                        <input type="text" class="form-control" id="principal_name" name="principal_name" value="{{ profile.principal_name }}">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="letterhead" class="form-label fw-bold">School Letterhead</label>
+                            <input type="file" class="form-control" id="letterhead" name="letterhead" accept="image/*">
+                            {% if profile.letterhead_url %}
+                            <div class="mt-2 text-success"><i class="fas fa-check-circle"></i> <a href="{{ url_for('static', filename=profile.letterhead_url) }}" target="_blank">View current letterhead</a></div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="signature" class="form-label fw-bold">Principal Signature</label>
+                            <input type="file" class="form-control" id="signature" name="signature" accept="image/*">
+                            {% if profile.signature_url %}
+                            <div class="mt-2 text-success"><i class="fas fa-check-circle"></i> <a href="{{ url_for('static', filename=profile.signature_url) }}" target="_blank">View current signature</a></div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

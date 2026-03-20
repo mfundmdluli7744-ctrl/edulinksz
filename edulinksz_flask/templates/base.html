@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduLinkSZ {% block title %}{% endblock %}</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="flag-accent d-flex" style="height: 6px; position: sticky; top: 0; z-index: 2050;">
+        <div style="flex: 1; background-color: var(--sz-blue);"></div>
+        <div style="flex: 0.2; background-color: var(--sz-yellow);"></div>
+        <div style="flex: 1.5; background-color: var(--sz-red);"></div>
+        <div style="flex: 0.2; background-color: var(--sz-yellow);"></div>
+        <div style="flex: 1; background-color: var(--sz-blue);"></div>
+    </div>
+    
+    {% if current_user.is_authenticated and request.blueprint not in ['admin', 'teacher', 'principal'] %}
+    <!-- Global Navbar for Parent/Guest layouts -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 shadow-lg border-bottom border-warning border-4 animate-up">
+        <div class="container">
+            <a class="navbar-brand fw-bold d-flex align-items-center" href="/">
+                <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="Logo" style="height: 40px;" class="me-2">
+                EduLink<span style="color: var(--sz-gold);">SZ</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    {% block navbar_links %}
+                    <li class="nav-item">
+                        <a class="nav-link active fw-semibold" href="#"><i class="fas fa-th-large me-1 text-gold"></i> Dashboard</a>
+                    </li>
+                    {% endblock %}
+                </ul>
+                <div class="d-flex align-items-center">
+                    <span class="navbar-text text-white fw-bold me-4 d-none d-md-inline">
+                        <i class="fas fa-user-circle fa-lg me-1 text-gold"></i> {{ current_user.name }}
+                    </span>
+                    <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-light btn-sm px-4 rounded-pill shadow-sm"><i class="fas fa-sign-out-alt me-1"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    {% endif %}
+
+    <div id="flash-messages" style="position: fixed; top: 20px; right: 20px; z-index: 3000;">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show glass-panel shadow-lg mb-3" role="alert" style="min-width: 300px; border-left: 5px solid var(--sz-gold);">
+                        <i class="fas fa-info-circle me-2 text-primary"></i> {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <main class="fade-in">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="container text-center">
+            <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="EduLinkSZ Logo" class="img-fluid mb-3" style="max-height: 80px;">
+            <p class="text-white-50 mb-4 letter-spacing-1">Official National Academic Portal of Eswatini</p>
+            <div class="d-flex justify-content-center gap-4 mb-4">
+                <a href="#" class="text-white-50 hover-elevate"><i class="fab fa-facebook fa-lg"></i></a>
+                <a href="#" class="text-white-50 hover-elevate"><i class="fab fa-twitter fa-lg"></i></a>
+                <a href="#" class="text-white-50 hover-elevate"><i class="fas fa-envelope fa-lg"></i></a>
+            </div>
+            <hr class="border-secondary mb-4 opacity-25">
+            <p class="small text-white-50 mb-0">&copy; 2026 EduLinkSZ. Secure. Reliable. Professional.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

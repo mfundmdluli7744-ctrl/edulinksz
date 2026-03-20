@@ -1,0 +1,129 @@
+{% extends 'admin/layout.html' %}
+{% block admin_content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800 fw-bold"><i class="fas fa-user-graduate me-2 text-primary"></i>Manage Students</h1>
+</div>
+
+<div class="row">
+    <!-- Enroll Student Form -->
+    <div class="col-lg-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Enroll New Student</h6>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('admin.manage_students') }}">
+                    <div class="mb-3">
+                        <label for="student_number" class="form-label fw-bold">Student Number (ID)</label>
+                        <input type="text" class="form-control text-uppercase" id="student_number" name="student_number" required placeholder="e.g. SZ-2026-001">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="first_name" class="form-label fw-bold">First Name</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="last_name" class="form-label fw-bold">Last Name</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="class_stream_id" class="form-label fw-bold">Assign to Class Stream</label>
+                        <select class="form-select" id="class_stream_id" name="class_stream_id" required>
+                            <option value="" disabled selected>Select a class...</option>
+                            {% for c in classes %}
+                            <option value="{{ c.id }}">Form {{ c.form_level }}{{ c.stream }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="parent_id" class="form-label fw-bold">Link to Parent Profile</label>
+                        <select class="form-select" id="parent_id" name="parent_id">
+                            <option value="">-- No Parent Linked --</option>
+                            {% for p in parents %}
+                            <option value="{{ p.id }}">{{ p.name }} ({{ p.username }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100"><i class="fas fa-user-plus me-2"></i>Enroll Student</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student List -->
+    <div class="col-lg-8">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Student Directory</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Student No.</th>
+                                <th>Full Name</th>
+                                <th>Class</th>
+                                <th>Parent Linked</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for s in students %}
+                            <tr>
+                                <td class="fw-bold">{{ s.student_number }}</td>
+                                <td>{{ s.first_name }} {{ s.last_name }}</td>
+                                <td>Form {{ s.class_stream.form_level }}{{ s.class_stream.stream }}</td>
+                                <td>
+                                    {% if s.parent %}
+                                    <span class="text-success"><i class="fas fa-check-circle me-1"></i>{{ s.parent.name }}</span>
+                                    {% else %}
+                                    <span class="text-muted"><i class="fas fa-times-circle me-1"></i>Unlinked</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-danger btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#deleteStudent{{ s.id }}">
+                                        <i class="fas fa-trash-alt me-1"></i> Delete
+                                    </button>
+
+                                    <!-- Delete Student Modal -->
+                                    <div class="modal fade" id="deleteStudent{{ s.id }}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content border-0 shadow-lg">
+                                                <div class="modal-header bg-danger text-white border-0">
+                                                    <h5 class="modal-title fw-bold"><i class="fas fa-exclamation-triangle me-2"></i>Confirm Deletion</h5>
+                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body p-4 text-center">
+                                                    <div class="mb-4">
+                                                        <i class="fas fa-user-minus text-danger fa-4x opacity-25"></i>
+                                                    </div>
+                                                    <h4 class="fw-bold">Delete Student?</h4>
+                                                    <p class="text-muted">Are you sure you want to delete <strong>{{ s.first_name }} {{ s.last_name }}</strong>? This will permanently remove all their academic data.</p>
+                                                    <div class="alert alert-danger border-0 small">
+                                                        <i class="fas fa-exclamation-circle me-1"></i> <strong>Warning:</strong> All marks, grades, and term reports for this student will be permanently deleted and cannot be recovered.
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer border-0 p-4 pt-0 justify-content-center">
+                                                    <button type="button" class="btn btn-light px-4 fw-bold" data-bs-dismiss="modal">Keep Student</button>
+                                                    <form action="{{ url_for('admin.delete_student', student_id=s.id) }}" method="POST">
+                                                        <button type="submit" class="btn btn-danger px-4 fw-bold shadow-sm">Confirm Delete</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="4" class="text-center py-4 text-muted">No students enrolled yet.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

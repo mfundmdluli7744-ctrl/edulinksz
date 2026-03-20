@@ -1,0 +1,80 @@
+{% extends 'portal_layout.html' %}
+{% block portal_content %}
+
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 bg-white">
+                    <h5 class="m-0 font-weight-bold text-primary">Academic Review: {{ student.first_name }} {{ student.last_name }}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="fw-bold text-muted text-uppercase small mb-0">Subject Results</h6>
+                        <div class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 p-2 px-3">
+                            <i class="fas fa-trophy me-1 text-gold"></i> Position: {{ rank if rank else 'N/A' }} of {{ total_students }}
+                        </div>
+                    </div>
+                    <div class="table-responsive mb-4">
+                        <table class="table table-sm table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Subject</th>
+                                    <th class="text-center">Marks</th>
+                                    <th class="text-center">Grade</th>
+                                    <th>Comment</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for r in results %}
+                                <tr>
+                                    <td>{{ r.subject.name }}</td>
+                                    <td class="text-center fw-bold">{{ r.marks }}%</td>
+                                    <td class="text-center"><span class="badge bg-secondary">{{ r.grade }}</span></td>
+                                    <td class="small">{{ r.teacher_comment }}</td>
+                                </tr>
+                                {% else %}
+                                <tr><td colspan="4" class="text-center text-muted py-3">No marks entered for this term yet.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="alert alert-light border shadow-sm">
+                        <h6 class="fw-bold text-primary mb-2">Class Teacher's Final Remark</h6>
+                        <p class="fst-italic mb-0">"{{ report.class_teacher_remark or 'No remark entered yet.' }}"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow border-primary border-top border-4">
+                <div class="card-header py-3 bg-white">
+                    <h5 class="m-0 font-weight-bold text-dark">Principal's Action</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-4">
+                            <label for="principal_remark" class="form-label fw-bold">Principal's Remark</label>
+                            <textarea class="form-control" id="principal_remark" name="principal_remark" rows="5" placeholder="Enter final remarks for the report card...">{{ report.principal_remark or '' }}</textarea>
+                        </div>
+                        
+                        <div class="form-check form-switch mb-4">
+                            <input class="form-check-input" type="checkbox" id="is_approved" name="is_approved" {% if report.is_approved %}checked{% endif %}>
+                            <label class="form-check-label fw-bold" for="is_approved">
+                                Approve Report Card
+                            </label>
+                            <div class="form-text">Approved reports will show the principal's signature to parents.</div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-2 shadow-sm">
+                            <i class="fas fa-save me-2"></i>Save & Finalize
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends 'admin/layout.html' %}
+{% block admin_content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800 fw-bold"><i class="fas fa-layer-group me-2 text-primary"></i>Manage Classes & Streams</h1>
+</div>
+
+<div class="row">
+    <!-- Add Class Form -->
+    <div class="col-lg-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Add New Class Stream</h6>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('admin.manage_classes') }}">
+                    <div class="mb-3">
+                        <label for="form_level" class="form-label fw-bold">Form Level (1-5)</label>
+                        <select class="form-select" id="form_level" name="form_level" required>
+                            <option value="1">Form 1</option>
+                            <option value="2">Form 2</option>
+                            <option value="3">Form 3</option>
+                            <option value="4">Form 4</option>
+                            <option value="5">Form 5</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="stream" class="form-label fw-bold">Stream Letter</label>
+                        <input type="text" class="form-control text-uppercase" id="stream" name="stream" required maxlength="5" placeholder="e.g. A, B, C">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100"><i class="fas fa-plus me-2"></i>Create Class</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Class List -->
+    <div class="col-lg-8">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Active Classes Directory</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th width="10%">ID</th>
+                                <th width="35%">Class Name</th>
+                                <th width="40%">Assigned Class Teacher</th>
+                                <th width="15%">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for c in classes %}
+                            <tr>
+                                <td>{{ c.id }}</td>
+                                <td class="fw-bold fs-5 text-dark">Form {{ c.form_level }}{{ c.stream }}</td>
+                                <td>
+                                    <form action="{{ url_for('admin.assign_class_teacher', class_id=c.id) }}" method="POST" class="d-flex gap-2">
+                                        <select name="teacher_id" class="form-select form-select-sm">
+                                            <option value="">-- Not Assigned --</option>
+                                            {% for t in teachers %}
+                                            <option value="{{ t.id }}" {% if c.class_teacher_id == t.id %}selected{% endif %}>{{ t.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <button type="submit" class="btn btn-sm btn-primary shadow-sm">Save</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <span class="badge bg-success">Active</span>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center py-4 text-muted">No classes have been registered in the system yet.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

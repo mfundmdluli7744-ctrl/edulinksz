@@ -1,0 +1,138 @@
+{% extends 'admin/layout.html' %}
+{% block admin_content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800 fw-bold"><i class="fas fa-user-friends me-2 text-primary"></i>Manage Parents</h1>
+</div>
+
+<div class="row">
+    <!-- Add Parent Form -->
+    <div class="col-lg-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Register New Parent</h6>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('admin.manage_parents') }}">
+                    <div class="mb-3">
+                        <label for="name" class="form-label fw-bold">Full Name</label>
+                        <input type="text" class="form-control" id="name" name="name" required placeholder="e.g. Jane Smith">
+                    </div>
+                    <div class="mb-3">
+                        <label for="username" class="form-label fw-bold">Login Username</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label fw-bold">Email Address</label>
+                        <input type="email" class="form-control" id="email" name="email" required placeholder="e.g. jane@example.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label fw-bold">Temporary Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100"><i class="fas fa-user-plus me-2"></i>Create Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Parent List -->
+    <div class="col-lg-8">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Registered Parents</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in parents %}
+                            <tr>
+                                <td>{{ p.id }}</td>
+                                <td class="fw-bold">{{ p.name }}</td>
+                                <td>{{ p.username }}</td>
+                                <td>{{ p.email if p.email else '-' }}</td>
+                                <td>
+                                    <div class="d-flex gap-2 align-items-center">
+                                        <span class="badge bg-success py-2 px-3">Active</span>
+                                        <button type="button" class="btn btn-outline-primary btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#resetPass{{ p.id }}">
+                                            <i class="fas fa-key me-1"></i> Reset Pass
+                                        </button>
+                                        <button type="button" class="btn btn-outline-danger btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#deleteParent{{ p.id }}">
+                                            <i class="fas fa-trash-alt me-1"></i> Delete
+                                        </button>
+                                    </div>
+
+                                    <!-- Reset Password Modal -->
+                                    <div class="modal fade" id="resetPass{{ p.id }}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content border-0 shadow-lg">
+                                                <div class="modal-header bg-primary text-white border-0">
+                                                    <h5 class="modal-title fw-bold"><i class="fas fa-key me-2"></i>Reset Password: {{ p.name }}</h5>
+                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form action="{{ url_for('admin.change_user_password', user_id=p.id) }}" method="POST">
+                                                    <div class="modal-body p-4">
+                                                        <div class="mb-3">
+                                                            <label class="form-label fw-bold">New Temporary Password</label>
+                                                            <input type="password" name="new_password" class="form-control" placeholder="Enter new password" required autofocus>
+                                                            <div class="form-text mt-2 small">Inform the parent of their new password after resetting.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer border-0 p-4 pt-0">
+                                                        <button type="button" class="btn btn-light px-4 fw-bold" data-bs-dismiss="modal">Cancel</button>
+                                                        <button type="submit" class="btn btn-primary px-4 fw-bold shadow-sm">Update Password</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Delete Parent Modal -->
+                                    <div class="modal fade" id="deleteParent{{ p.id }}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content border-0 shadow-lg">
+                                                <div class="modal-header bg-danger text-white border-0">
+                                                    <h5 class="modal-title fw-bold"><i class="fas fa-exclamation-triangle me-2"></i>Confirm Deletion</h5>
+                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body p-4 text-center">
+                                                    <div class="mb-4">
+                                                        <i class="fas fa-user-times text-danger fa-4x opacity-25"></i>
+                                                    </div>
+                                                    <h4 class="fw-bold">Delete Parent?</h4>
+                                                    <p class="text-muted">Are you sure you want to remove <strong>{{ p.name }}</strong> from the system? This will unlink them from their children's profiles.</p>
+                                                    <div class="alert alert-warning border-0 small">
+                                                        <i class="fas fa-info-circle me-1"></i> Any historical notifications sent to this parent will also be deleted.
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer border-0 p-4 pt-0 justify-content-center">
+                                                    <button type="button" class="btn btn-light px-4 fw-bold" data-bs-dismiss="modal">Keep Parent</button>
+                                                    <form action="{{ url_for('admin.delete_parent', parent_id=p.id) }}" method="POST">
+                                                        <button type="submit" class="btn btn-danger px-4 fw-bold shadow-sm">Confirm Delete</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="4" class="text-center py-4 text-muted">No parents registered yet.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

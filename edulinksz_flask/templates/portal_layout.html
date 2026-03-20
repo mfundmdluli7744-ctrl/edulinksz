@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block title %}- {{ current_user.role }} Portal{% endblock %}
+{% block extra_css %}
+<style>
+    .portal-nav {
+        background: rgba(255, 255, 255, 0.9) !important;
+        backdrop-filter: blur(15px);
+        border-bottom: 2px solid var(--sz-blue);
+        padding: 0.75rem 0;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+    .nav-link {
+        color: var(--sz-black) !important;
+        font-weight: 600;
+        padding: 0.5rem 1.25rem !important;
+        border-radius: 0.5rem;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+    }
+    .nav-link i {
+        margin-right: 8px;
+        font-size: 1.1rem;
+        opacity: 0.7;
+    }
+    .nav-link:hover {
+        background: rgba(43, 76, 126, 0.05);
+        color: var(--sz-blue) !important;
+    }
+    .nav-link.active {
+        background: var(--sz-blue);
+        color: white !important;
+        box-shadow: 0 4px 10px rgba(43, 76, 126, 0.2);
+    }
+    .portal-brand {
+        font-weight: 800;
+        font-size: 1.4rem;
+        color: var(--sz-blue) !important;
+    }
+    .portal-container {
+        padding-top: 2rem;
+        padding-bottom: 5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-expand-lg portal-nav sticky-top">
+    <div class="container">
+        <a class="navbar-brand portal-brand d-flex align-items-center" href="/">
+            <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="Logo" style="height: 35px;" class="me-2">
+            EduLink<span style="color: var(--sz-red);">SZ</span>
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#portalNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="portalNavbar">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                {% if current_user.role == 'Teacher' %}
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'teacher.dashboard' %}active{% endif %}" href="{{ url_for('teacher.dashboard') }}">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'grading' in request.endpoint or 'marks' in request.endpoint %}active{% endif %}" href="{{ url_for('teacher.my_classes') }}">
+                        <i class="fas fa-graduation-cap"></i> Grading Portal
+                    </a>
+                </li>
+                {% elif current_user.role == 'Principal' %}
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'principal.dashboard' %}active{% endif %}" href="{{ url_for('principal.dashboard') }}">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+            
+            <div class="d-flex align-items-center">
+                <div class="me-4 d-none d-lg-block">
+                    <div class="small text-muted fw-bold text-uppercase letter-spacing-1" style="font-size: 0.7rem;">Logged in as</div>
+                    <div class="fw-bold text-dark">{{ current_user.name }} <span class="badge bg-secondary ms-1" style="font-size: 0.6rem;">{{ current_user.role }}</span></div>
+                </div>
+                <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-danger btn-sm px-4 rounded-pill shadow-sm fw-bold">
+                    <i class="fas fa-sign-out-alt me-1"></i> Logout
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container portal-container fade-in">
+    {% block portal_content %}{% endblock %}
+</div>
+{% endblock %}

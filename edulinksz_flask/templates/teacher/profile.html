@@ -1,0 +1,79 @@
+{% extends 'portal_layout.html' %}
+{% block portal_content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <div class="d-flex align-items-center">
+                    <h2 class="fw-bold mb-0 text-dark"><i class="fas fa-user-circle me-2 text-primary"></i>My Profile</h2>
+                    {% if current_user.is_profile_approved %}
+                        <span class="badge bg-success ms-3"><i class="fas fa-check-circle me-1"></i> Approved</span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark ms-3"><i class="fas fa-clock me-1"></i> Pending Approval</span>
+                    {% endif %}
+                </div>
+                <a href="{{ url_for('teacher.dashboard') }}" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                </a>
+            </div>
+
+            <div class="card shadow border-0">
+                <div class="card-body p-4">
+                    <form method="POST" enctype="multipart/form-data">
+                        <div class="mb-4">
+                            <label for="name" class="form-label fw-bold small text-uppercase text-muted">Full Name</label>
+                            <input type="text" class="form-control form-control-lg bg-light border-0" id="name" name="name" value="{{ current_user.name }}" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold small text-uppercase text-muted">Upload Your Signature</label>
+                            <div class="p-4 border-2 border-dashed border-primary rounded-3 text-center bg-light-primary">
+                                {% if current_user.signature_url %}
+                                    <div class="mb-3">
+                                        <p class="small text-muted mb-2">Current Signature:</p>
+                                        <img src="{{ url_for('static', filename=current_user.signature_url) }}" alt="Teacher Signature" class="img-fluid rounded border bg-white p-2" style="max-height: 120px;">
+                                    </div>
+                                {% else %}
+                                    <div class="mb-3 py-3 text-muted">
+                                        <i class="fas fa-file-signature fa-3x mb-2 text-primary opacity-50"></i>
+                                        <p class="mb-0">No signature uploaded yet.</p>
+                                    </div>
+                                {% endif %}
+                                <div class="input-group">
+                                    <input type="file" class="form-control" id="signature" name="signature" accept="image/*">
+                                </div>
+                                <div class="form-text mt-2">Recommended: transparent PNG or clear white background image.</div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4 opacity-10">
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm">
+                            <i class="fas fa-save me-2"></i> Save Changes
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="alert alert-info border-0 shadow-sm mt-4">
+                <div class="d-flex">
+                    <i class="fas fa-info-circle fa-lg me-3 mt-1"></i>
+                    <div>
+                        <h6 class="fw-bold mb-1">Signature Usage</h6>
+                        <p class="small mb-0 opacity-75">Your signature will be automatically added to the report cards of all students in classes where you are the assigned Class Teacher.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.bg-light-primary {
+    background-color: rgba(13, 110, 253, 0.03);
+}
+.border-dashed {
+    border-style: dashed !important;
+}
+</style>
+{% endblock %}
