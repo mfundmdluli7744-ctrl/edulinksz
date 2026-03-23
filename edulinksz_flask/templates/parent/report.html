@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Report Card</title>
+    <!-- Bootstrap 5 CSS for printing -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Times New Roman', serif; background-color: #f8f9fc; color: #000; }
+        .report-container { max-width: 800px; margin: 20px auto; padding: 40px; border: 2px solid #000; background-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .school-header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 20px; }
+        .student-details { margin-bottom: 30px; }
+        .student-details table { width: 100%; }
+        .student-details td { padding: 5px; }
+        .marks-table th, .marks-table td { border: 1px solid #000; padding: 8px; text-align: center; }
+        .marks-table th { background-color: #f8f9fa !important; }
+        .subject-col { text-align: left !important; }
+        .remarks-section { margin-top: 30px; }
+        .signature-line { border-bottom: 2px solid #000; width: 180px; display: inline-block; margin-top: 10px; }
+        .sig-container { height: 100px; display: flex; align-items: flex-end; justify-content: center; position: relative; }
+        .stamp-approved { position: absolute; top: -10px; right: 0; transform: rotate(-15deg); border: 4px solid #198754; color: #198754; padding: 5px 15px; font-weight: 900; font-size: 1.2rem; border-radius: 10px; opacity: 0.6; pointer-events: none; }
+        .seal-official { position: absolute; left: 0; bottom: 0; width: 60px; opacity: 0.2; filter: grayscale(1); }
+        .sig-block { padding: 20px 10px; border-top: 1px solid #eee; }
+        .sig-title { font-size: 0.85rem; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
+        .sig-name { font-size: 1.1rem; font-weight: bold; margin-bottom: 2px; }
+        
+        @media print {
+            body { background-color: white; }
+            .report-container { border: none; padding: 0; box-shadow: none; margin: 0; }
+            .no-print { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="text-center no-print mt-4 mb-3">
+        <button onclick="window.print()" class="btn btn-primary"><i class="fas fa-print me-1"></i> Print Report Card</button>
+        <a href="{{ url_for('parent.dashboard') }}" class="btn btn-secondary"><i class="fas fa-arrow-left me-1"></i> Back</a>
+    </div>
+
+    <div class="report-container">
+        <!-- School Header -->
+        <div class="school-header">
+            <div class="text-center mb-3">
+                <h6 class="fw-bold text-muted small mb-0 text-uppercase letter-spacing-1">National Academic Portal</h6>
+                <h5 class="fw-bold mb-0">Kingdom of Eswatini</h5>
+            </div>
+            <hr class="my-3">
+            {% if school.letterhead_url %}
+            <img src="{{ url_for('static', filename=school.letterhead_url) }}" alt="School Letterhead" style="max-width: 100%; max-height: 120px; margin-bottom: 10px;">
+            <h2 class="fw-bold text-uppercase text-primary mb-1">{{ school.name }}</h2>
+            {% else %}
+            <h1 class="fw-bold text-uppercase text-primary">{{ school.name }}</h1>
+            {% endif %}
+            <p class="mb-1 fw-bold">{{ school.address }}</p>
+            <p class="mb-0 text-muted small">
+                {% if school.email %}<i class="fas fa-envelope me-1"></i> {{ school.email }}{% endif %}
+                {% if school.tel %}<span class="mx-2">|</span><i class="fas fa-phone me-1"></i> {{ school.tel }}{% endif %}
+                {% if school.phone %}<span class="mx-2">|</span><i class="fas fa-mobile-alt me-1"></i> {{ school.phone }}{% endif %}
+            </p>
+            <h3 class="fw-bold mt-3 border-top pt-3">STUDENT ACADEMIC REPORT</h3>
+            <p class="mb-0 fw-bold">Academic Year: {{ school.academic_year }} | Term: {{ school.current_term }}</p>
+        </div>
+
+        <!-- Student Details -->
+        <div class="student-details glass-card p-4 rounded-3 border-0 shadow-sm animate-up">
+            <table class="table-borderless">
+                <tr>
+                    <td width="20%"><strong class="text-primary small text-uppercase letter-spacing-1">Student Name</strong></td>
+                    <td width="30%" class="fw-bold border-bottom">{{ student.first_name }} {{ student.last_name }}</td>
+                    <td width="15%"><strong class="text-primary small text-uppercase letter-spacing-1 ps-3">Student ID</strong></td>
+                    <td width="35%" class="fw-bold border-bottom">{{ student.student_number }}</td>
+                </tr>
+                <tr>
+                    <td><strong class="text-primary small text-uppercase letter-spacing-1">Class / Form</strong></td>
+                    <td class="fw-bold border-bottom">Form {{ student.class_stream.form_level }}{{ student.class_stream.stream }}</td>
+                    <td><strong class="text-primary small text-uppercase letter-spacing-1 ps-3">Class Teacher</strong></td>
+                    <td class="fw-bold border-bottom">{{ student.class_stream.class_teacher.name if student.class_stream.class_teacher else 'N/A' }}</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Performance Table -->
+        <table class="table marks-table mb-4">
+            <thead>
+                <tr>
+                    <th class="subject-col" width="25%">Subject</th>
+                    <th width="10%">T1</th>
+                    <th width="10%">T2</th>
+                    <th width="15%">Final (%)</th>
+                    <th width="10%">Symbol</th>
+                    <th width="30%">Teacher's Comment</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results %}
+                <tr>
+                    <td class="subject-col fw-bold">{{ result.subject.name }}</td>
+                    <td>{{ result.test1_marks if result.test1_marks is not none else '-' }}</td>
+                    <td>{{ result.test2_marks if result.test2_marks is not none else '-' }}</td>
+                    <td><strong>{{ result.marks }}</strong></td>
+                    <td><strong>{{ result.grade if result.grade else '-' }}</strong></td>
+                    <td class="text-start" style="font-size: 0.85rem;">{{ result.teacher_comment }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6">No results available for this term.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Summary & Remarks -->
+        <div class="remarks-section border p-3 mb-4">
+            <div class="row mb-2">
+                <div class="col-6"><strong>Total Marks:</strong> {{ term_report.total_marks if term_report else '___' }}</div>
+                <div class="col-6"><strong>Position:</strong> <span class="fw-bold">{{ rank if rank else '___' }}</span> out of <span class="fw-bold">{{ total_students }}</span></div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-12"><strong>Overall Performance:</strong> <span class="fw-bold text-uppercase">{{ term_report.overall_performance if term_report else '___' }}</span></div>
+            </div>
+            <hr>
+            <div class="row mb-3 mt-3">
+                <div class="col-12">
+                    <strong>Class Teacher's Remark:</strong><br>
+                    <p class="mt-2 text-decoration-underline" style="min-height: 40px;">{{ term_report.class_teacher_remark if term_report else '' }}</p>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-12">
+                    <strong>Principal's Remark:</strong><br>
+                    <p class="mt-2 text-decoration-underline" style="min-height: 40px;">{{ term_report.principal_remark if term_report else '' }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Signatures -->
+        <div class="row mt-5 sig-block">
+            <div class="col-6 text-center border-end">
+                <div class="sig-container mb-3">
+                    {% if student.class_stream.class_teacher and student.class_stream.class_teacher.signature_url %}
+                        <img src="{{ url_for('static', filename=student.class_stream.class_teacher.signature_url) }}" alt="Teacher Signature" style="max-height: 90px; filter: contrast(110%)" class="mb-1">
+                    {% else %}
+                        <div class="signature-line mb-3"></div>
+                    {% endif %}
+                </div>
+                <div class="sig-name">{{ student.class_stream.class_teacher.name if student.class_stream.class_teacher else 'N/A' }}</div>
+                <div class="sig-title">Class Teacher</div>
+                <p class="text-muted" style="font-size: 0.7rem; font-style: italic;">Date: {{ datetime.utcnow().strftime('%Y-%m-%d') if datetime else '' }}</p>
+            </div>
+            <div class="col-6 text-center">
+                <div class="sig-container mb-3">
+                    {% if school.signature_url and term_report and term_report.is_approved %}
+                        <div class="stamp-approved">APPROVED</div>
+                        <img src="{{ url_for('static', filename=school.signature_url) }}" alt="Principal Signature" style="max-height: 90px; filter: contrast(110%)" class="mb-1">
+                    {% elif term_report and not term_report.is_approved %}
+                        <div class="d-flex align-items-center justify-content-center h-100">
+                            <span class="badge bg-danger rounded-pill px-3 py-2 shadow-sm" style="font-size: 0.75rem;">
+                                <i class="fas fa-lock me-1"></i> PENDING FINAL APPROVAL
+                            </span>
+                        </div>
+                    {% else %}
+                        <div class="signature-line mb-3"></div>
+                    {% endif %}
+                </div>
+                <div class="sig-name">{{ school.principal_name or '__________________' }}</div>
+                <div class="sig-title">School Head / Principal</div>
+                <p class="text-muted" style="font-size: 0.7rem; font-style: italic;">Official School Seal (Digital)</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

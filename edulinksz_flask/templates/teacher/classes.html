@@ -1,0 +1,51 @@
+{% extends 'portal_layout.html' %}
+{% block portal_content %}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="fw-bold text-dark">Grading Portal: Select Class & Subject</h2>
+            <p class="text-muted">Currently evaluating for <strong>{{ school.current_term }} ({{ school.academic_year }})</strong></p>
+        </div>
+    </div>
+    
+    <div class="row">
+        {% for c in classes %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100 border-top border-primary border-3">
+                <div class="card-body text-center">
+                    <h4 class="fw-bold text-primary mb-3">Form {{ c.form_level }}{{ c.stream }}</h4>
+                    <p class="text-muted small mb-3">Select the subject you teach for this class to enter marks.</p>
+                    
+                    <div class="dropdown mb-2">
+                        <button class="btn btn-outline-primary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-edit me-1"></i> Enter Marks For...
+                        </button>
+                        <ul class="dropdown-menu w-100 shadow" style="max-height: 250px; overflow-y: auto;">
+                            {% for s in subjects %}
+                            <li><a class="dropdown-item py-2 border-bottom" href="{{ url_for('teacher.enter_marks', class_id=c.id, subject_id=s.id) }}">{{ s.name }}</a></li>
+                            {% else %}
+                            <li><span class="dropdown-item text-muted">No Subjects Available in System.</span></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    
+                    {% if c.class_teacher_id == current_user.id %}
+                    <div class="mt-3 pt-3 border-top">
+                        <span class="badge bg-info text-dark mb-2">You are Class Teacher</span>
+                        <a href="{{ url_for('teacher.class_remarks', class_id=c.id) }}" class="btn btn-success w-100">
+                            <i class="fas fa-comment-alt me-1"></i> Class Remarks & Status
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12 text-center py-5">
+            <h5 class="text-muted">No classes are currently created in the system.</h5>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
