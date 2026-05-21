@@ -1,0 +1,111 @@
+{% extends 'portal_layout.html' %}
+{% block title %}- Enter Marks{% endblock %}
+{% block portal_content %}
+
+<div class="container py-2">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-dark mb-1">Upload Results: <span class="text-primary">{{ subject.name }}</span></h2>
+            <h5 class="text-muted fw-bold">Class: Form {{ c_stream.form_level }}{{ c_stream.stream }} &nbsp;|&nbsp; Term: {{ term }} ({{ year }})</h5>
+        </div>
+        <a href="{{ url_for('teacher.my_classes') }}" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-1"></i>Back to Classes</a>
+    </div>
+
+    <div class="card shadow-sm border-0 border-top border-primary border-4 mb-5">
+        <div class="card-body p-0">
+            <form method="POST">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped align-middle mb-0">
+                        <thead class="table-dark text-uppercase text-xs fw-bold">
+                            <tr>
+                                <th class="ps-4 py-3">Student Name & ID</th>
+                                <th width="12%">Test 1</th>
+                                <th width="12%">Test 2</th>
+                                <th width="15%">Final Mark (%)</th>
+                                <th width="15%">Grade/Symbol</th>
+                                <th width="30%" class="pe-4">Teacher's Formal Comment</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                            {% set res = existing_results.get(student.id) %}
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="fw-bold text-dark fs-5">{{ student.last_name }}, {{ student.first_name }}</div>
+                                    <div class="text-primary small fw-bold">{{ student.student_number }}</div>
+                                </td>
+                                <td>
+                                    <input type="number" step="0.1" max="100" min="0" 
+                                           class="form-control form-control-lg text-center fw-bold text-primary border-primary bg-light test-input" 
+                                           name="test1_{{ student.id }}" 
+                                           id="test1_{{ student.id }}"
+                                           data-student-id="{{ student.id }}"
+                                           value="{{ res.test1_marks if res and res.test1_marks is not none else '' }}" 
+                                           placeholder="--">
+                                </td>
+                                <td>
+                                    <input type="number" step="0.1" max="100" min="0" 
+                                           class="form-control form-control-lg text-center fw-bold text-primary border-primary bg-light test-input" 
+                                           name="test2_{{ student.id }}" 
+                                           id="test2_{{ student.id }}"
+                                           data-student-id="{{ student.id }}"
+                                           value="{{ res.test2_marks if res and res.test2_marks is not none else '' }}" 
+                                           placeholder="--">
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="number" step="0.1" class="form-control form-control-lg text-center fw-bold text-secondary bg-white" 
+                                               id="final_{{ student.id }}"
+                                               value="{{ res.marks if res else '' }}" 
+                                               readonly>
+                                        <span class="input-group-text fw-bold">%</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <select class="form-select form-select-lg fw-bold text-center border-secondary" name="grade_{{ student.id }}">
+                                        <option value="" {% if not res or not res.grade %}selected{% endif %}>None</option>
+                                        <option value="A*" {% if res and res.grade == 'A*' %}selected{% endif %}>A* (Excellence)</option>
+                                        <option value="A" {% if res and res.grade == 'A' %}selected{% endif %}>A (Very Good)</option>
+                                        <option value="B" {% if res and res.grade == 'B' %}selected{% endif %}>B (Good)</option>
+                                        <option value="C" {% if res and res.grade == 'C' %}selected{% endif %}>C (Credit)</option>
+                                        <option value="D" {% if res and res.grade == 'D' %}selected{% endif %}>D (Pass)</option>
+                                        <option value="E" {% if res and res.grade == 'E' %}selected{% endif %}>E (Lower Pass)</option>
+                                        <option value="F" {% if res and res.grade == 'F' %}selected{% endif %}>F (Fail)</option>
+                                    </select>
+                                </td>
+                                <td class="pe-4">
+                                    <textarea class="form-control border-secondary" name="comment_{{ student.id }}" rows="2" placeholder="e.g. Excellent understanding of concepts...">{{ res.teacher_comment if res else '' }}</textarea>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center py-5">
+                                    <div class="text-muted"><i class="fas fa-users-slash fa-3x mb-3 text-light"></i><br><h5>No students enrolled in Form {{ c_stream.form_level }}{{ c_stream.stream }} yet.</h5></div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% if students %}
+                <div class="card-footer bg-light p-4 text-end">
+                    <button type="submit" class="btn btn-success btn-lg px-5 shadow"><i class="fas fa-save me-2"></i>Save All Class Marks</button>
+                </div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.querySelectorAll('.test-input').forEach(input => {
+    input.addEventListener('input', function() {
+        const studentId = this.getAttribute('data-student-id');
+        const t1 = parseFloat(document.getElementById('test1_' + studentId).value) || 0;
+        const t2 = parseFloat(document.getElementById('test2_' + studentId).value) || 0;
+        const final = (t1 + t2) / 2;
+        document.getElementById('final_' + studentId).value = final.toFixed(1);
+    });
+});
+</script>
+{% endblock %}

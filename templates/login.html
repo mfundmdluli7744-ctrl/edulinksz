@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}- Login{% endblock %}
+{% block content %}
+<div class="login-grid">
+    <!-- Hero Side -->
+    <div class="login-hero hide-on-mobile">
+        <div class="pattern-overlay"></div>
+        <div class="login-hero-content animate-up">
+            <div class="mb-4">
+                <img src="{{ url_for('static', filename='img/logo_new.svg') }}" alt="EduLinkSZ" style="height: 100px; filter: drop-shadow(0 0 20px rgba(255,255,255,0.1));">
+            </div>
+            <h1 class="display-3 fw-extrabold text-white mb-3" style="line-height: 1.1;">National Academic <span class="text-gold">Shield</span></h1>
+            <p class="lead text-white opacity-75 mb-5" style="font-size: 1.25rem;">Secure, reliable, and professional management for Eswatini's future. Access your specialized portal through our unified gateway.</p>
+            
+            <div class="d-flex gap-4">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="bg-white bg-opacity-10 p-2 rounded-3 border border-white border-opacity-10">
+                        <i class="fas fa-shield-alt text-gold"></i>
+                    </div>
+                    <span class="text-white small fw-bold">AES-256 Encryption</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <div class="bg-white bg-opacity-10 p-2 rounded-3 border border-white border-opacity-10">
+                        <i class="fas fa-clock text-gold"></i>
+                    </div>
+                    <span class="text-white small fw-bold">99.9% Uptime SLA</span>
+                </div>
+            </div>
+        </div>
+        
+        <div style="position: absolute; bottom: 40px; left: 64px; z-index: 2;">
+            <p class="text-white-50 small mb-0">&copy; 2026 EduLinkSZ. Powered by Ministry of Education Services.</p>
+        </div>
+    </div>
+
+    <!-- Form Side -->
+    <div class="login-form-side">
+        <div class="login-card-minimal animate-up">
+            <div class="text-center mb-5 d-lg-none">
+                <img src="{{ url_for('static', filename='img/logo_new.svg') }}" alt="Logo" style="height: 60px;" class="mb-4">
+            </div>
+            <div class="mb-5">
+                <h2 class="fw-bold text-dark h3">Welcome Back</h2>
+                <p class="text-muted">Enter your institutional credentials to continue</p>
+            </div>
+
+            <form method="POST" action="{{ url_for('auth.login') }}">
+                <div class="mb-4">
+                    <label class="form-label small fw-bold text-dark text-uppercase letter-spacing-1">Username or ID</label>
+                    <input type="text" name="username" class="form-control input-premium" placeholder="Ex: ADM-001" required autofocus>
+                </div>
+
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between">
+                        <label class="form-label small fw-bold text-dark text-uppercase letter-spacing-1">Secure Password</label>
+                        <a href="#" class="small text-primary text-decoration-none fw-bold">Help?</a>
+                    </div>
+                    <input type="password" name="password" class="form-control input-premium" placeholder="••••••••" required>
+                </div>
+
+                <div class="d-grid mb-5">
+                    <button type="submit" class="btn btn-primary btn-premium shadow-lg">
+                        Access Portal <i class="fas fa-chevron-right ms-2 scale-up"></i>
+                    </button>
+                </div>
+            </form>
+
+            <div class="text-center pt-4 border-top border-light">
+                <p class="small text-muted mb-0">Authorized personnel only. Access attempt logs are monitored.</p>
+                <div class="mt-4 d-flex align-items-center justify-content-center gap-2">
+                    <span class="badge rounded-pill bg-success p-1 px-3" style="font-size: 0.65rem;">
+                        <span class="spinner-grow spinner-grow-sm me-1" style="width: 0.4rem; height: 0.4rem;"></span> SERVER CONNECTED
+                    </span>
+                    <span class="text-muted small" style="font-size: 0.65rem;">SESSION v2.1.0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .scale-up { transition: transform 0.2s; }
+    .btn-premium:hover .scale-up { transform: translateX(4px); }
+</style>
+{% endblock %}

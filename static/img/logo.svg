@@ -1,0 +1,41 @@
+<svg width="600" height="600" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Brand Colors -->
+  <defs>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2B4C7E;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1E3A5F;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Outer Ring (Gold) -->
+  <circle cx="300" cy="300" r="280" fill="none" stroke="#FFD700" stroke-width="15" />
+  <circle cx="300" cy="300" r="260" fill="none" stroke="#2B4C7E" stroke-width="2" />
+
+  <!-- Text Paths -->
+  <path id="topCurve" d="M 100,300 A 200,200 0 0 1 500,300" fill="none" />
+  <path id="bottomCurve" d="M 100,300 A 200,200 0 0 0 500,300" fill="none" />
+
+  <!-- School Name -->
+  <text font-family="Outfit, sans-serif" font-size="54" font-weight="900" fill="#2B4C7E" text-anchor="middle">
+    <textPath href="#topCurve" startOffset="50%">EDULINKSZ</textPath>
+  </text>
+
+  <!-- Subtitle -->
+  <text font-family="Inter, sans-serif" font-size="32" font-weight="700" fill="#A7203B" text-anchor="middle">
+    <textPath href="#bottomCurve" startOffset="50%" side="right" baseline-shift="-40px">NATIONAL ACADEMIC PORTAL</textPath>
+  </text>
+
+  <!-- Central Emblem -->
+  <g transform="translate(225, 200) scale(0.6)">
+    <!-- Book Icon -->
+    <path d="M40 200 L120 180 L120 40 L40 60 Z" fill="#2B4C7E" />
+    <path d="M120 180 L200 200 L200 60 L120 40 Z" fill="#1E3A5F" />
+    <path d="M45 205 L125 185 L125 45 L45 65 Z" fill="none" stroke="#FFD700" stroke-width="4" />
+    <!-- Link Icon -->
+    <circle cx="120" cy="120" r="40" fill="#A7203B" />
+    <path d="M100 120 L140 120 M120 100 L120 140" stroke="white" stroke-width="12" stroke-linecap="round" />
+  </g>
+
+  <!-- Year -->
+  <text x="300" cy="480" font-family="Outfit, sans-serif" font-size="36" font-weight="800" fill="#FFD700" text-anchor="middle">2026</text>
+</svg>

@@ -1,0 +1,470 @@
+{% extends 'base.html' %}
+
+{% block title %}- EduLink SZ{% endblock %}
+
+{% block extra_css %}
+<style>
+    .landing-hero {
+        min-height: 80vh;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, rgba(30,58,95,0.95) 0%, rgba(24,45,75,0.95) 100%);
+        color: #ffffff;
+        position: relative;
+        overflow: hidden;
+    }
+    .landing-hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at top left, rgba(255,215,0,0.12), transparent 35%), radial-gradient(circle at bottom right, rgba(255,255,255,0.08), transparent 22%);
+        pointer-events: none;
+    }
+    .landing-hero .hero-panel {
+        position: relative;
+        z-index: 2;
+        padding: 4rem 2rem;
+        border-radius: 2rem;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.18);
+        box-shadow: 0 24px 80px rgba(0,0,0,0.18);
+        backdrop-filter: blur(14px);
+    }
+    .landing-hero h1 {
+        font-size: clamp(2.75rem, 5vw, 4rem);
+        line-height: 1.02;
+    }
+    .landing-hero p.lead {
+        max-width: 700px;
+    }
+    .hero-actions .btn {
+        min-width: 160px;
+    }
+    .preview-card {
+        border-radius: 1.75rem;
+        padding: 1.5rem;
+        background: rgba(255,255,255,0.95);
+        box-shadow: var(--sz-shadow-lg);
+        border: 1px solid rgba(30,58,95,0.08);
+    }
+    .preview-card .preview-bar {
+        height: 6px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--sz-blue), var(--sz-blue-dark));
+        margin-bottom: 1rem;
+    }
+    .preview-card .mini-card {
+        background: #ffffff;
+        border-radius: 1rem;
+        border: 1px solid rgba(14, 27, 47, 0.06);
+        box-shadow: var(--sz-shadow-sm);
+    }
+    .preview-avatar {
+        width: 46px;
+        height: 46px;
+        border-radius: 1rem;
+        background: rgba(30,58,95,0.1);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .section-title {
+        max-width: 720px;
+    }
+    .feature-card {
+        border-radius: 1.25rem;
+        border: 1px solid rgba(30,58,95,0.08);
+        background: rgba(255,255,255,0.95);
+        box-shadow: var(--sz-shadow-sm);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .feature-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--sz-shadow);
+    }
+    .feature-card .icon-box {
+        width: 56px;
+        height: 56px;
+        border-radius: 1rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--sz-white);
+        background: linear-gradient(135deg, var(--sz-blue), var(--sz-blue-dark));
+        box-shadow: 0 16px 40px rgba(30,58,95,0.18);
+    }
+    .feature-card h5 {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    .preview-grid {
+        gap: 1.25rem;
+    }
+    .system-preview {
+        border-radius: 2rem;
+        background: rgba(255,255,255,0.92);
+        border: 1px solid rgba(30,58,95,0.08);
+        box-shadow: var(--sz-shadow-lg);
+    }
+    .chart-bar {
+        height: 12px;
+        border-radius: 999px;
+        background: var(--sz-gray-200);
+        overflow: hidden;
+    }
+    .chart-bar span {
+        display: block;
+        height: 100%;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--sz-blue), var(--sz-blue-dark));
+    }
+    .step-card {
+        border-radius: 1.5rem;
+        border: 1px solid rgba(30,58,95,0.08);
+        background: rgba(255,255,255,0.96);
+        box-shadow: var(--sz-shadow-sm);
+        padding: 1.4rem;
+    }
+    .step-number {
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--sz-blue);
+        color: var(--sz-white);
+        font-weight: 700;
+        box-shadow: 0 12px 24px rgba(30,58,95,0.16);
+    }
+    .cta-panel {
+        border-radius: 2rem;
+        background: linear-gradient(135deg, rgba(30,58,95,0.96), rgba(24,45,75,0.96));
+        color: rgba(255,255,255,0.95);
+        padding: 3rem 2rem;
+        box-shadow: var(--sz-shadow-lg);
+    }
+    .footer-cta {
+        border-radius: 1rem;
+        border: 1px solid rgba(255,255,255,0.14);
+    }
+    @media (max-width: 992px) {
+        .landing-hero { min-height: auto; padding: 4rem 0; }
+        .landing-hero .hero-panel { padding: 2.5rem 1.5rem; }
+    }
+    @media (max-width: 768px) {
+        .preview-card { padding: 1.25rem; }
+        .feature-card { padding: 1.4rem; }
+        .chart-bar { min-width: 100%; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="landing-hero">
+    <div class="container">
+        <div class="row align-items-center gy-5">
+            <div class="col-lg-6">
+                <div class="hero-panel animate-up">
+                    <span class="badge bg-white bg-opacity-10 text-white border border-white border-opacity-25 mb-3">EduLink SZ</span>
+                    <h1 class="fw-bold">Student Report & Academic Records Portal</h1>
+                    <p class="lead text-white-75 mt-4">EduLink SZ helps schools manage student reports, academic performance, and academic records in one secure digital system.</p>
+                    <div class="d-flex flex-column flex-sm-row gap-3 gap-sm-4 mt-4 hero-actions">
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-premium btn-lg">Login</a>
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-lg text-white btn-premium border-white border-opacity-25">Get Started</a>
+                    </div>
+                    <div class="mt-5 pt-3 text-white-75 small">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <i class="fas fa-shield-alt text-gold"></i> Secure portal access for schools and administrators.
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="fas fa-chart-line text-gold"></i> Live academic overview with digital reports and analytics.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="preview-card animate-up">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <div class="preview-avatar"><i class="fas fa-school text-primary"></i></div>
+                                <div>
+                                    <p class="mb-0 text-uppercase text-muted small letter-spacing-1">EduLink SZ</p>
+                                    <h5 class="mb-0 fw-bold text-dark">School Dashboard</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="badge bg-primary bg-opacity-10 text-primary">Preview</span>
+                    </div>
+                    <div class="preview-bar"></div>
+                    <div class="row g-3 mt-3">
+                        <div class="col-6">
+                            <div class="mini-card p-3">
+                                <div class="d-flex align-items-center justify-content-between mb-3">
+                                    <div class="text-muted small">Reports</div>
+                                    <span class="badge bg-success bg-opacity-10 text-success">+12%</span>
+                                </div>
+                                <div class="h5 fw-bold text-dark">312</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mini-card p-3">
+                                <div class="d-flex align-items-center justify-content-between mb-3">
+                                    <div class="text-muted small">Records</div>
+                                    <span class="badge bg-info bg-opacity-10 text-info">Safe</span>
+                                </div>
+                                <div class="h5 fw-bold text-dark">1,280</div>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-2">
+                            <div class="mini-card p-3">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="text-muted small">Performance</span>
+                                    <span class="text-dark fw-bold">A+</span>
+                                </div>
+                                <div class="chart-bar"><span style="width: 82%;"></span></div>
+                                <div class="d-flex justify-content-between small text-muted mt-2">
+                                    <span>Average</span>
+                                    <span>82%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="mini-card p-3">
+                                <div class="d-flex align-items-center gap-3 text-dark mb-3">
+                                    <i class="fas fa-user-graduate text-primary"></i>
+                                    <div>
+                                        <div class="small text-muted text-uppercase">Student group</div>
+                                        <div class="fw-bold">Form 4</div>
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-2 flex-wrap text-muted small">
+                                    <span class="badge bg-secondary bg-opacity-10 text-dark">Math</span>
+                                    <span class="badge bg-secondary bg-opacity-10 text-dark">Science</span>
+                                    <span class="badge bg-secondary bg-opacity-10 text-dark">English</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="text-center mb-5 section-title mx-auto">
+        <p class="text-gold text-uppercase fw-bold small mb-2">Trusted academic operations</p>
+        <h2 class="fw-bold">Powerful school tools with a polished administrative experience.</h2>
+    </div>
+    <div class="row g-4">
+        {% set features = [
+            {'icon':'fas fa-file-alt','title':'Student Report Management','text':'Create, review and distribute professional student reports with ease.'},
+            {'icon':'fas fa-chart-line','title':'Academic Performance Tracking','text':'Monitor grades, trends and performance across subjects and terms.'},
+            {'icon':'fas fa-lock','title':'Secure Student Records','text':'Protect private student information with controlled access and encryption.'},
+            {'icon':'fas fa-school','title':'School Administration Tools','text':'Manage classes, teachers, students and school details in one hub.'},
+            {'icon':'fas fa-chart-pie','title':'Analytics & Insights','text':'Visualize academic progress and identify opportunities with rich dashboards.'},
+            {'icon':'fas fa-users-cog','title':'Role-Based Access Control','text':'Assign permissions for admins, teachers, principals and parents.'}
+        ] %}
+        {% for feature in features %}
+        <div class="col-md-6 col-lg-4">
+            <div class="feature-card p-4 h-100 animate-up">
+                <div class="icon-box mb-3"><i class="{{ feature.icon }} fa-lg"></i></div>
+                <h5 class="fw-bold">{{ feature.title }}</h5>
+                <p class="text-muted mb-0">{{ feature.text }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="row align-items-center gy-5">
+        <div class="col-lg-6">
+            <div class="section-title mb-4">
+                <p class="text-gold text-uppercase fw-bold small mb-2">System preview</p>
+                <h2 class="fw-bold">See how EduLink SZ brings classroom data to life.</h2>
+                <p class="text-muted">An integrated view of dashboard metrics, student reports, analytics charts, and secure academic records.</p>
+            </div>
+            <div class="row preview-grid">
+                <div class="col-sm-6">
+                    <div class="mini-card p-4 mb-4">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="text-muted small text-uppercase">Records</div>
+                            <span class="badge bg-success bg-opacity-10 text-success">Safe</span>
+                        </div>
+                        <p class="fw-bold mb-0 text-dark">Student data with audit trail and secure access.</p>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="mini-card p-4 mb-4">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div class="text-muted small text-uppercase">Charts</div>
+                            <span class="badge bg-info bg-opacity-10 text-info">Live</span>
+                        </div>
+                        <p class="fw-bold mb-0 text-dark">Visual trends for performance, subject scores and attendance.</p>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="mini-card p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="mb-0 fw-bold text-dark">Dashboard metrics</h6>
+                            <span class="badge bg-primary bg-opacity-10 text-primary">Summary</span>
+                        </div>
+                        <div class="chart-bar mb-3"><span style="width: 68%;"></span></div>
+                        <div class="d-flex justify-content-between small text-muted">
+                            <span>Overall engagement</span>
+                            <span>68%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="system-preview p-4 animate-up">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <div>
+                        <p class="text-muted small text-uppercase mb-1">EduLink SZ preview</p>
+                        <h5 class="fw-bold mb-0 text-dark">School Analytics Panel</h5>
+                    </div>
+                    <span class="badge bg-primary bg-opacity-10 text-primary">Dashboard</span>
+                </div>
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="card glass-card p-3 border-0">
+                            <div class="text-muted small mb-2">Active teachers</div>
+                            <div class="h4 fw-bold text-dark">24</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card glass-card p-3 border-0">
+                            <div class="text-muted small mb-2">Students</div>
+                            <div class="h4 fw-bold text-dark">842</div>
+                        </div>
+                    </div>
+                    <div class="col-12 mt-3">
+                        <div class="card glass-card p-4 border-0">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="text-muted small">Term insight</span>
+                                <span class="badge bg-warning bg-opacity-10 text-warning">On track</span>
+                            </div>
+                            <div class="chart-bar mb-3"><span style="width: 74%;"></span></div>
+                            <div class="d-flex justify-content-between small text-muted">
+                                <span>Attendance rate</span>
+                                <span>74%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5 bg-white">
+    <div class="row gy-4 align-items-center">
+        <div class="col-lg-5">
+            <div class="section-title mb-4">
+                <p class="text-gold text-uppercase fw-bold small mb-2">Trusted security</p>
+                <h2 class="fw-bold">Security & reliability built into every access point.</h2>
+                <p class="text-muted">EduLink SZ protects student data, secures authentication, and enforces role-based access for every school user.</p>
+            </div>
+        </div>
+        <div class="col-lg-7">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="feature-card p-4 h-100 animate-up">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="icon-box"><i class="fas fa-user-lock"></i></div>
+                            <div>
+                                <h6 class="fw-bold mb-1">Secure Authentication</h6>
+                                <p class="small text-muted mb-0">Access is restricted to authorized staff and stakeholders.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="feature-card p-4 h-100 animate-up">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="icon-box"><i class="fas fa-database"></i></div>
+                            <div>
+                                <h6 class="fw-bold mb-1">Protected Student Data</h6>
+                                <p class="small text-muted mb-0">Student records are stored with strong controls and audit-ready logs.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="feature-card p-4 h-100 animate-up">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="icon-box"><i class="fas fa-user-shield"></i></div>
+                            <div>
+                                <h6 class="fw-bold mb-1">Role-Based Access</h6>
+                                <p class="small text-muted mb-0">Admins, teachers, and parents each see only the tools they need.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="feature-card p-4 h-100 animate-up">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="icon-box"><i class="fas fa-cloud-upload-alt"></i></div>
+                            <div>
+                                <h6 class="fw-bold mb-1">Reliable Cloud Access</h6>
+                                <p class="small text-muted mb-0">School teams stay connected through secure, dependable access.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="text-center mb-5 section-title mx-auto">
+        <p class="text-gold text-uppercase fw-bold small mb-2">Get started in three steps</p>
+        <h2 class="fw-bold">How it works</h2>
+        <p class="text-muted">A simple setup flow for schools to bring student records online and deliver report access digitally.</p>
+    </div>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="step-card animate-up">
+                <div class="step-number mb-3">1</div>
+                <h5 class="fw-bold mb-2">School registers on system</h5>
+                <p class="text-muted mb-0">Create your school profile and invite administrative users.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="step-card animate-up">
+                <div class="step-number mb-3">2</div>
+                <h5 class="fw-bold mb-2">Students and data are added</h5>
+                <p class="text-muted mb-0">Enroll students, assign classes, and upload academic records.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="step-card animate-up">
+                <div class="step-number mb-3">3</div>
+                <h5 class="fw-bold mb-2">Reports are accessed digitally</h5>
+                <p class="text-muted mb-0">Teachers, principals and parents review reports across secure accounts.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5 mb-5">
+    <div class="cta-panel text-white text-center animate-up">
+        <div class="row align-items-center gy-4">
+            <div class="col-lg-6">
+                <h2 class="fw-bold mb-3">Access Your School Reports Digitally</h2>
+                <p class="mb-0 text-white-75">EduLink SZ gives your school a single secure portal for reporting, tracking and student records.</p>
+            </div>
+            <div class="col-lg-6 d-flex justify-content-center gap-3 flex-wrap">
+                <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-premium btn-lg">Login to Portal</a>
+                <a href="mailto:support@edulinksz.sz" class="btn btn-outline-light btn-lg btn-premium footer-cta">Contact Support</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

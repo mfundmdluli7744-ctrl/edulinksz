@@ -1,0 +1,62 @@
+{% extends 'admin/layout.html' %}
+{% block admin_content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800 fw-bold"><i class="fas fa-book me-2 text-primary"></i>Manage Subjects</h1>
+</div>
+
+<div class="row">
+    <!-- Add Subject Form -->
+    <div class="col-lg-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Add New Subject</h6>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('admin.manage_subjects') }}">
+                    <div class="mb-3">
+                        <label for="name" class="form-label fw-bold">Subject Name</label>
+                        <input type="text" class="form-control" id="name" name="name" required placeholder="e.g., Mathematics">
+                        <div class="form-text mt-2"><i class="fas fa-info-circle me-1"></i>Please follow the standard Eswatini syllabus nomenclature (e.g., "Mathematics", "SiSwati", "Physical Science").</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100"><i class="fas fa-plus me-2"></i>Add Subject</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subject List -->
+    <div class="col-lg-8">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Official Curriculum Subjects</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th width="15%">ID</th>
+                                <th width="65%">Subject Name</th>
+                                <th width="20%">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for s in subjects %}
+                            <tr>
+                                <td>{{ s.id }}</td>
+                                <td class="fw-bold fs-5 text-dark">{{ s.name }}</td>
+                                <td><span class="badge bg-success">Active</span></td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center py-4 text-muted">No subjects have been mapped into the core system yet.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
